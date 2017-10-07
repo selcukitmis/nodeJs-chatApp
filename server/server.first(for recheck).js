@@ -22,19 +22,14 @@ io.on("connection", socket => {
   //   text: "mail text"
   // });
 
-  // socket.emit("newMessage", {
-  //   from: "From Server",
-  //   text: "Keep this text browser",
-  //   createdAt: 123
-  // });
+  socket.emit("newMessage", {
+    from: "From Server",
+    text: "Keep this text browser",
+    createdAt: 123
+  });
 
   socket.on("createMessage", message => {
     console.log("createMessage", message);
-    io.emit("newMessage", {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().getTime()
-    });
   });
 
   // socket.on("createEmail", newEmail => {
