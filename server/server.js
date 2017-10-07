@@ -12,8 +12,32 @@ app.use(express.static(publicPath));
 
 io.on("connection", socket => {
   console.log("new user connected");
-  socket.on("disconnect",() => {
-      console.log("User was disconnedted");
+
+  // socket.on ile karşı taraftan birşey alınır
+  // socket.emit ile karşı tarafa birşeyler yollanır
+
+  // // browserdaki bir methodu tetikledik. ilk parametre browserdaki fonksiyonun adıdır.
+  // socket.emit("newEmail", {
+  //   from: "slck87@hotmail",
+  //   text: "mail text"
+  // });
+
+  socket.emit("newMessage", {
+    from: "From Server",
+    text: "Keep this text browser",
+    createdAt: 123
+  });
+
+  socket.on("createMessage", message => {
+    console.log("createMessage", message);
+  });
+
+  // socket.on("createEmail", newEmail => {
+  //   console.log("create email", newEmail);
+  // });
+
+  socket.on("disconnect", () => {
+    console.log("User was disconnedted");
   });
 });
 
