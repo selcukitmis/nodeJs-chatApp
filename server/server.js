@@ -7,6 +7,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = socketIO(server);
+const { generateMessage } = require("./utils/message");
+
 // uygulamanın çalışacağı yer
 app.use(express.static(publicPath));
 
@@ -31,25 +33,16 @@ io.on("connection", socket => {
   socket.on("createMessage", message => {
     console.log("createMessage", message);
 
-    socket.emit("newMessage", {
-      from: "Admin",
-      text: "Sohbete hoş geldiniz",
-      createdAt: new Date().getTime()
-    });
+    socket.emit("newMessage", generateMessage("admin", "sohbete hoş geldiniz"));
 
     // o an sitede olan herkesde çalışır, ben hariç
-    socket.broadcast.emit("newMessage", {
-      from: "Admin",
-      text: "Yeni kullanıcı (" + message.from + ") sohbete katıldı",
-      createdAt: new Date().getTime()
-    });
+    socket.broadcast.emit(
+      "newMessage",
+      generateMessage("Admin", "Yeni kullanıcı sohbete katıldı")
+    );
 
     // o an sitede olan herkesde çalışır, ben dahil
-    io.emit("newMessage", {
-      from: "Admin",
-      text: "Bu herkese gönderildi",
-      createdAt: new Date().getTime()
-    });
+    io.emit("newMessage", generateMessage("Admin", "Bu herkese gönderildi"));
   });
 
   // socket.on("createEmail", newEmail => {
