@@ -2,7 +2,7 @@ var socket = io();
 socket.on("connect", function() {
   // connect olduğunda çalışır
   console.log("Connected to server");
-  
+  socket.emit("createMessage", { from: "Selçuk", text: "çalıştı" });
 });
 
 socket.on("disconnect", function() {

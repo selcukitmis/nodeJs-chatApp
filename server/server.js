@@ -30,9 +30,24 @@ io.on("connection", socket => {
 
   socket.on("createMessage", message => {
     console.log("createMessage", message);
+
+    socket.emit("newMessage", {
+      from: "Admin",
+      text: "Sohbete hoş geldiniz",
+      createdAt: new Date().getTime()
+    });
+
+    // o an sitede olan herkesde çalışır, ben hariç
+    socket.broadcast.emit("newMessage", {
+      from: "Admin",
+      text: "Yeni kullanıcı (" + message.from + ") sohbete katıldı",
+      createdAt: new Date().getTime()
+    });
+
+    // o an sitede olan herkesde çalışır, ben dahil
     io.emit("newMessage", {
-      from: message.from,
-      text: message.text,
+      from: "Admin",
+      text: "Bu herkese gönderildi",
       createdAt: new Date().getTime()
     });
   });
