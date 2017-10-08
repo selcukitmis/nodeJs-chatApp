@@ -1,4 +1,5 @@
 var socket = io();
+
 socket.on("connect", function() {
   // connect olduğunda çalışır
   //console.log("Connected to server");
@@ -14,16 +15,17 @@ socket.on("disconnect", function() {
 // });
 
 socket.on("newMessage", message => {
-  console.log("new message", message);
+  const formattedTime = moment(message.createdAt).format("h:mm");
   let li = jQuery("<li></li>");
-  li.text(`${message.from}: ${message.text}`);
+  li.text(`${message.from} - ${formattedTime}: ${message.text}`);
   $("#messages").append(li);
 });
 
 socket.on("newLocationMessage", function(message) {
+  const formattedTime = moment(message.createdAt).format("LLL");
   let li = jQuery("<li></li>");
   let a = jQuery("<a target='_blank'>My Current Location</a>");
-  li.text(`${message.from}: `);
+  li.text(`${message.from} - ${formattedTime}: `);
   a.attr("href", message.url);
   li.append(a);
   $("#messages").append(li);
