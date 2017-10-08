@@ -30,24 +30,25 @@ io.on("connection", socket => {
   //   createdAt: 123
   // });
 
-  socket.on("createMessage", message => {
-    console.log("createMessage", message);
+  // bu sadece bana gönderilir
+  socket.emit("newMessage", generateMessage("admin", "sohbete hoş geldiniz"));
 
-    socket.emit("newMessage", generateMessage("admin", "sohbete hoş geldiniz"));
+  // o an sitede olan herkesde çalışır, ben hariç
+  socket.broadcast.emit(
+    "newMessage",
+    generateMessage("Admin", "Yeni kullanıcı sohbete katıldı")
+  );
 
-    // o an sitede olan herkesde çalışır, ben hariç
-    socket.broadcast.emit(
+  // // o an sitede olan herkesde çalışır, ben dahil
+  // io.emit("newMessage", generateMessage("Admin", "Bu herkese gönderildi"));
+
+  socket.on("createMessage", (message, callback) => {
+    io.emit(
       "newMessage",
-      generateMessage("Admin", "Yeni kullanıcı sohbete katıldı")
+      generateMessage(message.from, message.text)
     );
-
-    // o an sitede olan herkesde çalışır, ben dahil
-    io.emit("newMessage", generateMessage("Admin", "Bu herkese gönderildi"));
+    callback("İşlemi onayladım");
   });
-
-  // socket.on("createEmail", newEmail => {
-  //   console.log("create email", newEmail);
-  // });
 
   socket.on("disconnect", () => {
     console.log("User was disconnedted");
